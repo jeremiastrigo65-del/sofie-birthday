@@ -9,6 +9,9 @@ const MESSAGE =
 const PHOTO = "/us.jpg"; // photo in the public folder
 /* ====================== */
 
+const SONG1 = "/song.mp3";
+const SONG2 = "/song2.mp3";
+
 const css = (v) => v;
 const rnd = (a, b) => a + Math.random() * (b - a);
 
@@ -242,13 +245,28 @@ export default function App() {
     if (audioRef.current) audioRef.current.muted = !muted;
     setMuted(!muted);
   };
+  const playSong = (src) => {
+    const a = audioRef.current;
+    if (!a) return;
+    a.src = src;
+    a.loop = true;
+    a.volume = 1;
+    a.play().catch(() => {});
+  };
+  const resumeMusic = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    a.volume = 1;
+    if (a.paused) a.play().catch(() => {});
+  };
   useEffect(() => () => { micRef.current?.stop(); clearTimeout(finaleTimer.current); }, []);
 
   const stopMic = () => {
     micRef.current?.stop();
     micRef.current = null;
     setListening(false);
-    if (audioRef.current) audioRef.current.volume = 1;
+    resumeMusic();
+    window.setTimeout(resumeMusic, 600);
   };
   const blowOut = () => {
     stopMic();
@@ -256,7 +274,10 @@ export default function App() {
     setLit(false);
     setBurst((b) => b + 1);
     clearTimeout(finaleTimer.current);
-    finaleTimer.current = window.setTimeout(() => setFinale(true), 6000);
+    finaleTimer.current = window.setTimeout(() => {
+      setFinale(true);
+      playSong(SONG2);
+    }, 6000);
   };
   const startListening = async () => {
     try {
@@ -309,6 +330,7 @@ export default function App() {
       setFinale(false);
       setClaimed(false);
       setLit(true);
+      resumeMusic();
     }
     else if (listening) blowOut();
     else startListening();
@@ -316,7 +338,7 @@ export default function App() {
 
   return (
     <>
-      <audio ref={audioRef} src="/song.mp3" loop preload="auto" />
+      <audio ref={audioRef} src={SONG1} loop preload="auto" />
 
       {!opened && (
         <div className={`gate ${leaving ? "leaving" : ""}`}>
@@ -363,7 +385,7 @@ export default function App() {
               <p className="from">
                 Your wish is safe with me.
                 <br />
-                With lots of love, {FROM_NAME}
+                Sincerity, {FROM_NAME}
               </p>
             )}
           </section>
@@ -375,11 +397,11 @@ export default function App() {
               <Garden base={1} step={0.5} />
               <Bouquet />
               {!claimed ? (
-                <button className="claim" onClick={() => setClaimed(true)}>Claim unya</button>
+                <button className="claim" onClick={() => { setClaimed(true); resumeMusic(); }}>Claim unya</button>
               ) : (
                 <>
                   {PHOTO && <img className="f-photo" src={PHOTO} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} />}
-                  <button className="f-back" onClick={() => { setFinale(false); setClaimed(false); }}>Back to the cake</button>
+                  <button className="f-back" onClick={() => { setFinale(false); setClaimed(false); playSong(SONG1); }}>Back to the cake</button>
                 </>
               )}
             </div>
