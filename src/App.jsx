@@ -6,11 +6,18 @@ const HER_NAME = "Sofie";
 const FROM_NAME = "Jem";
 const MESSAGE =
  "Happy birthday sof I wish u all the best in life, more happiness, success, love, and blessings. I hope u achieve all ur dreams and get everything that ur heart wishes for. Always take care of urself. Enjoy ur day 💗";
-const PHOTO = "/us.jpg"; // photo in the public folder
+// Your memory photos (put them in the public folder). Edit the captions!
+const SLIDES = [
+  { src: "/white.jpg", caption: "" },
+  { src: "/us.jpg", caption: "happy birthday HAHHAHAHA" },
+  { src: "/us3.jpg", caption: "My favorite day with you" },
+  { src: "/us4.jpg", caption: "Always you" },
+];
 /* ====================== */
 
 const SONG1 = "/song.mp3";
 const SONG2 = "/song2.mp3";
+const VIDEO = "/vide.mp4"; // put your video in the public folder (use "" to turn it off)
 
 const css = (v) => v;
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -173,6 +180,41 @@ function Bouquet() {
   );
 }
 
+function Slideshow({ slides, children }) {
+  const [i, setI] = useState(0);
+  const [failed, setFailed] = useState([]);
+  const list = slides.map((s, n) => ({ ...s, n })).filter((s) => !failed.includes(s.n));
+  const last = list.length - 1;
+  const cur = Math.min(i, last);
+
+  useEffect(() => {
+    if (cur >= last) return;
+    const t = window.setTimeout(() => setI(cur + 1), 5200);
+    return () => clearTimeout(t);
+  }, [cur, last]);
+
+  return (
+    <div className="show">
+      <div className="slides" onClick={() => setI(Math.min(cur + 1, last))}>
+        {list.map((s, k) => (
+          <figure key={s.n} className={`slide ${k === cur ? "on" : ""}`}>
+            <div className="ph">
+              <img src={s.src} alt="" onError={() => setFailed((f) => [...f, s.n])} />
+            </div>
+            <figcaption>{s.caption}</figcaption>
+          </figure>
+        ))}
+      </div>
+      <div className="dots" aria-hidden="true">
+        {list.map((s, k) => (
+          <i key={s.n} className={k === cur ? "on" : ""} />
+        ))}
+      </div>
+      {cur >= last && children}
+    </div>
+  );
+}
+
 function useTypewriter(text, active) {
   const [out, setOut] = useState("");
   useEffect(() => {
@@ -206,6 +248,7 @@ export default function App() {
   const [listening, setListening] = useState(false);
   const [finale, setFinale] = useState(false);
   const [claimed, setClaimed] = useState(false);
+  const [playing, setPlaying] = useState(false);
   const finaleTimer = useRef(null);
   const typed = useTypewriter(MESSAGE, opened);
 
@@ -252,6 +295,14 @@ export default function App() {
     a.loop = true;
     a.volume = 1;
     a.play().catch(() => {});
+  };
+  const startVideo = () => {
+    audioRef.current?.pause();
+    setPlaying(true);
+  };
+  const stopVideo = () => {
+    setPlaying(false);
+    audioRef.current?.play().catch(() => {});
   };
   const resumeMusic = () => {
     const a = audioRef.current;
@@ -349,7 +400,7 @@ export default function App() {
               <path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.3 2.8 5 6 5c2.1 0 3.6 1.1 4.6 2.6.5.7 1.4.7 1.9 0C13.4 6.1 14.9 5 17 5c3.2 0 5.1 3.3 3.6 6.7C19.5 16.4 12 21 12 21z" />
             </svg>
           </button>
-          <p className="gate-hint">Tap the seal to open</p>
+          <p className="gate-hint">Tap to open</p>
         </div>
       )}
 
@@ -397,13 +448,20 @@ export default function App() {
               <Garden base={1} step={0.5} />
               <Bouquet />
               {!claimed ? (
-                <button className="claim" onClick={() => { setClaimed(true); resumeMusic(); }}>Claim unya</button>
+                <button className="claim" onClick={() => { setClaimed(true); resumeMusic(); }}>Claim </button>
               ) : (
-                <>
-                  {PHOTO && <img className="f-photo" src={PHOTO} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} />}
+                <Slideshow slides={SLIDES}>
+                  {VIDEO && <button className="claim vid-btn" onClick={startVideo}>V</button>}
                   <button className="f-back" onClick={() => { setFinale(false); setClaimed(false); playSong(SONG1); }}>Back to the cake</button>
-                </>
+                </Slideshow>
               )}
+            </div>
+          )}
+
+          {playing && (
+            <div className="vid-overlay">
+              <video src={VIDEO} controls autoPlay playsInline onEnded={stopVideo} onError={stopVideo} />
+              <button className="f-back" onClick={stopVideo}>Close</button>
             </div>
           )}
 
