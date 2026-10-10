@@ -8,8 +8,8 @@ const MESSAGE =
  "Happy birthday sof I wish u all the best in life, more happiness, success, love, and blessings. I hope u achieve all ur dreams and get everything that ur heart wishes for. Always take care of urself. Enjoy ur day 💗";
 // Your memory photos (put them in the public folder). Edit the captions!
 const SLIDES = [
-  { src: "/white.jpg", caption: "" },
-  { src: "/us.jpg", caption: "happy birthday HAHHAHAHA" },
+  { src: "/us.jpg", caption: "Us 💗" },
+  { src: "/us2.jpg", caption: "Our first date" },
   { src: "/us3.jpg", caption: "My favorite day with you" },
   { src: "/us4.jpg", caption: "Always you" },
 ];
@@ -17,7 +17,7 @@ const SLIDES = [
 
 const SONG1 = "/song.mp3";
 const SONG2 = "/song2.mp3";
-const VIDEO = "/vide.mp4"; // put your video in the public folder (use "" to turn it off)
+const VIDEO = "/video.mp4"; // put your video in the public folder (use "" to turn it off)
 
 const css = (v) => v;
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -332,10 +332,12 @@ export default function App() {
   };
   const startListening = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: true, noiseSuppression: false, autoGainControl: false },
-      });
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      ctx.resume?.();
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+      });
+      await ctx.resume?.();
       const analyser = ctx.createAnalyser();
       analyser.fftSize = 1024;
       ctx.createMediaStreamSource(stream).connect(analyser);
@@ -350,14 +352,14 @@ export default function App() {
         }
         const rms = Math.sqrt(sum / data.length);
         if (frames < 30) {
-          base = Math.max(base, rms);
+          base += rms / 30;
           frames++;
         } else {
-          const limit = base * 2.5 + 0.08;
+          const limit = base * 1.8 + 0.035;
           const level = Math.min(1, Math.max(0, (rms - base) / (limit - base)));
           sceneRef.current?.style.setProperty("--breath", level.toFixed(2));
           strong = rms > limit ? strong + 1 : 0;
-          if (strong > 10) return blowOut();
+          if (strong > 6) return blowOut();
         }
         raf = requestAnimationFrame(tick);
       };
@@ -368,7 +370,7 @@ export default function App() {
           ctx.close();
         },
       };
-      if (audioRef.current) audioRef.current.volume = 0.2;
+      if (audioRef.current) audioRef.current.volume = 0.08;
       setListening(true);
       tick();
     } catch {
@@ -400,7 +402,7 @@ export default function App() {
               <path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.3 2.8 5 6 5c2.1 0 3.6 1.1 4.6 2.6.5.7 1.4.7 1.9 0C13.4 6.1 14.9 5 17 5c3.2 0 5.1 3.3 3.6 6.7C19.5 16.4 12 21 12 21z" />
             </svg>
           </button>
-          <p className="gate-hint">Tap to open</p>
+          <p className="gate-hint">Tap the seal to open</p>
         </div>
       )}
 
@@ -429,14 +431,14 @@ export default function App() {
             <p className="message">{typed}</p>
             {typed.length >= MESSAGE.length && (
               <button className="wish" onClick={wish}>
-                {!lit ? "" : listening ? "Blow the candle after Wish" : "Make a wish"}
+                {!lit ? "Wish again" : listening ? "Blow the candle after Wish" : "Make a wish"}
               </button>
             )}
             {!lit && (
               <p className="from">
                 Your wish is safe with me.
                 <br />
-                Sincerity, {FROM_NAME}
+                With lots of love, {FROM_NAME}
               </p>
             )}
           </section>
@@ -448,10 +450,10 @@ export default function App() {
               <Garden base={1} step={0.5} />
               <Bouquet />
               {!claimed ? (
-                <button className="claim" onClick={() => { setClaimed(true); resumeMusic(); }}>Claim </button>
+                <button className="claim" onClick={() => { setClaimed(true); resumeMusic(); }}>Claim unya</button>
               ) : (
                 <Slideshow slides={SLIDES}>
-                  {VIDEO && <button className="claim vid-btn" onClick={startVideo}>V</button>}
+                  {VIDEO && <button className="claim vid-btn" onClick={startVideo}>Watch our video</button>}
                   <button className="f-back" onClick={() => { setFinale(false); setClaimed(false); playSong(SONG1); }}>Back to the cake</button>
                 </Slideshow>
               )}
