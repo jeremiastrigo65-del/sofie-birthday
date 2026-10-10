@@ -181,7 +181,7 @@ function useTypewriter(text, active) {
         n++;
         setOut(text.slice(0, n));
         if (n >= text.length) clearInterval(id);
-      }, 90);
+      }, 120);
     }, 5500);
     return () => {
       clearTimeout(start);
@@ -356,7 +356,7 @@ export default function App() {
             <p className="message">{typed}</p>
             {typed.length >= MESSAGE.length && (
               <button className="wish" onClick={wish}>
-                {!lit ? " " : listening ? "Now blow the candle" : "Make a wish"}
+                {!lit ? "" : listening ? "Blow the candle after Wish" : "Make a wish"}
               </button>
             )}
             {!lit && (
