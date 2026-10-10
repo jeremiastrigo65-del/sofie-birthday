@@ -8,8 +8,8 @@ const MESSAGE =
  "Happy birthday sof I wish u all the best in life, more happiness, success, love, and blessings. I hope u achieve all ur dreams and get everything that ur heart wishes for. Always take care of urself. Enjoy ur day 💗";
 // Your memory photos (put them in the public folder). Edit the captions!
 const SLIDES = [
-  { src: "/us.jpg", caption: "Us 💗" },
-  { src: "/us2.jpg", caption: "Our first date" },
+  { src: "/us22.jpg", caption: "" },
+  { src: "/us.jpg", caption: "" },
   { src: "/us3.jpg", caption: "My favorite day with you" },
   { src: "/us4.jpg", caption: "Always you" },
 ];
@@ -438,7 +438,7 @@ export default function App() {
               <p className="from">
                 Your wish is safe with me.
                 <br />
-                With lots of love, {FROM_NAME}
+                Sincerity, {FROM_NAME}
               </p>
             )}
           </section>
@@ -453,7 +453,7 @@ export default function App() {
                 <button className="claim" onClick={() => { setClaimed(true); resumeMusic(); }}>Claim unya</button>
               ) : (
                 <Slideshow slides={SLIDES}>
-                  {VIDEO && <button className="claim vid-btn" onClick={startVideo}>Watch our video</button>}
+                  {VIDEO && <button className="claim vid-btn" onClick={startVideo}></button>}
                   <button className="f-back" onClick={() => { setFinale(false); setClaimed(false); playSong(SONG1); }}>Back to the cake</button>
                 </Slideshow>
               )}
