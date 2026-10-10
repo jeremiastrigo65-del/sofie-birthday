@@ -3,7 +3,7 @@ import "./App.css";
 
 /* ===== EDIT THESE ===== */
 const HER_NAME = "Sofie";
-const FROM_NAME = "Jemar";
+const FROM_NAME = "Jem";
 const MESSAGE =
  "Happy birthday sof I wish u all the best in life, more happiness, success, love, and blessings. I hope u achieve all ur dreams and get everything that ur heart wishes for. Always take care of urself. Enjoy ur day 💗";
 const PHOTO = "/us.jpg"; // photo in the public folder
