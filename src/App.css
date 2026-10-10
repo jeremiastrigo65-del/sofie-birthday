@@ -1,0 +1,168 @@
+:root {
+  --ink: #160b1c;
+  --plum: #2a1433;
+  --rose: #f48fb1;
+  --blush: #ffd9e4;
+  --cream: #fff4f0;
+  --gold: #ffcf7a;
+  --display: "Cormorant Garamond", Georgia, serif;
+}
+
+/* ---------- Gate (tap to open) ---------- */
+.gate {
+  position: fixed; inset: 0; z-index: 20;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+  background: radial-gradient(ellipse at 50% 40%, #4a2250 0%, var(--plum) 50%, var(--ink) 100%);
+  transition: opacity 2.5s ease, transform 2.5s ease;
+}
+.gate.leaving { opacity: 0; transform: scale(1.08); }
+.gate-for { margin: 0; font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(2.4rem, 10vw, 3.6rem); color: var(--blush); }
+.gate-hint { margin: 0; font-weight: 300; letter-spacing: 0.08em; font-size: 0.95rem; color: rgba(255, 217, 228, 0.7); }
+.seal {
+  position: relative; width: 112px; height: 112px; border: 0; border-radius: 50%; cursor: pointer;
+  display: grid; place-items: center;
+  background: radial-gradient(circle at 35% 30%, #e8668f, #a8234f 70%);
+  box-shadow: 0 10px 30px rgba(168, 35, 79, 0.55), inset 0 -6px 12px rgba(0, 0, 0, 0.25), inset 0 4px 8px rgba(255, 255, 255, 0.25);
+  animation: beat 1.6s ease-in-out infinite;
+}
+.seal:focus-visible { outline: 3px solid var(--gold); outline-offset: 6px; }
+.seal-ring { position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--rose); animation: ring 1.6s ease-out infinite; }
+@keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+@keyframes ring { from { transform: scale(1); opacity: 0.8; } to { transform: scale(1.9); opacity: 0; } }
+
+/* ---------- Scene ---------- */
+.scene {
+  position: relative; min-height: 100svh; overflow: hidden;
+  background: radial-gradient(ellipse at 50% 38%, #4a2250 0%, var(--plum) 45%, var(--ink) 100%);
+  animation: sceneIn 1.2s ease both;
+}
+@keyframes sceneIn { from { opacity: 0; } to { opacity: 1; } }
+.glow {
+  position: absolute; inset: 0; pointer-events: none; opacity: 1; transition: opacity 1.2s ease;
+  background: radial-gradient(circle at 50% 42%, rgba(255, 190, 120, 0.32), transparent 52%);
+}
+.scene.dim .glow { opacity: 0.2; }
+.star { position: absolute; border-radius: 50%; background: #fff; opacity: 0.3; animation: twinkle var(--d) ease-in-out infinite alternate; }
+@keyframes twinkle { to { opacity: 0.95; } }
+
+.petal {
+  position: fixed; top: -6vh; z-index: 2; pointer-events: none;
+  width: var(--size); height: calc(var(--size) * 1.3); background: var(--c); opacity: 0.85;
+  border-radius: 100% 0 100% 0;
+  animation: fall var(--dur) linear var(--delay) infinite;
+}
+@keyframes fall {
+  from { transform: translate3d(0, 0, 0) rotate(0deg); }
+  to { transform: translate3d(var(--drift), 112vh, 0) rotate(560deg); }
+}
+
+.mute {
+  position: fixed; top: 14px; right: 14px; z-index: 10; cursor: pointer;
+  padding: 8px 14px; border-radius: 999px; border: 1px solid rgba(255, 217, 228, 0.4);
+  background: rgba(22, 11, 28, 0.5); color: var(--blush); font: 300 0.85rem "Jost", sans-serif; backdrop-filter: blur(6px);
+}
+.mute:focus-visible, .wish:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+.content {
+  position: relative; z-index: 3; text-align: center;
+  padding: 64px 20px 240px; display: flex; flex-direction: column; align-items: center;
+}
+.title { margin: 0; display: flex; flex-direction: column; font-family: var(--display); animation: sceneIn 3.5s 0.5s ease both; }
+.hb { font-style: italic; font-weight: 300; font-size: clamp(2.2rem, 9vw, 3.6rem); color: var(--blush); }
+.name { font-weight: 500; font-size: clamp(3.4rem, 15vw, 6.6rem); line-height: 1; color: var(--cream); text-shadow: 0 0 36px rgba(244, 143, 177, 0.6); }
+
+.cake-wrap { margin-top: 12px; animation: rise 3.5s 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.cake { width: min(78vw, 310px); height: auto; overflow: visible; filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.4)); }
+@keyframes rise { from { opacity: 0; transform: translateY(60px) scale(0.92); } to { opacity: 1; transform: none; } }
+
+.flame { transform-box: fill-box; transform-origin: 50% 100%; animation: flicker 0.9s ease-in-out var(--fd) infinite alternate; transition: opacity 0.4s; }
+.flame.out { opacity: 0; animation: none; }
+@keyframes flicker { 0% { transform: scale(1, 1) rotate(-2deg); } 100% { transform: scale(0.92, 1.08) rotate(2deg); } }
+.smoke { fill: none; stroke: rgba(255, 255, 255, 0.55); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 60; animation: smoke 2.4s ease-out forwards; }
+@keyframes smoke { from { stroke-dashoffset: 60; opacity: 1; transform: translateY(0); } to { stroke-dashoffset: 0; opacity: 0; transform: translateY(-14px); } }
+
+.message {
+  margin: 20px 0 0; min-height: 9em; max-width: 30ch;
+  font-family: var(--display); font-style: italic; font-size: clamp(1.25rem, 4.6vw, 1.55rem); line-height: 1.5; color: var(--cream);
+}
+.wish {
+  margin-top: 8px; padding: 13px 28px; border: 0; border-radius: 999px; cursor: pointer;
+  background: linear-gradient(135deg, #f48fb1, #e8668f); color: #fff;
+  font: 400 1rem "Jost", sans-serif; letter-spacing: 0.04em; box-shadow: 0 8px 24px rgba(232, 102, 143, 0.45);
+  animation: sceneIn 1.8s ease both;
+}
+.from { margin: 22px 0 0; font-family: var(--display); font-style: italic; font-size: 1.35rem; line-height: 1.6; color: var(--gold); animation: sceneIn 1.2s ease both; }
+
+/* ---------- Garden ---------- */
+.garden { position: absolute; left: 0; right: 0; bottom: 0; height: 220px; z-index: 4; pointer-events: none; }
+.garden::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 56px; background: linear-gradient(transparent, rgba(22, 11, 28, 0.95)); }
+.stem-wrap { position: absolute; bottom: 0; width: 0; height: var(--h); transform-origin: bottom center; animation: sway 5s ease-in-out infinite alternate; }
+.stem { position: absolute; bottom: 0; left: -1.5px; width: 3px; height: 100%; border-radius: 3px; background: linear-gradient(#6aa371, #2f5d3a); transform-origin: bottom; animation: grow 3s var(--d) cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.leaf { position: absolute; bottom: 30%; width: 24px; height: 12px; background: #4f8a5b; border-radius: 100% 0 100% 0; opacity: 0; animation: sceneIn 1.5s calc(var(--d) + 2s) ease forwards; }
+.leaf.l { right: 1px; transform: rotate(-28deg); transform-origin: right bottom; }
+.leaf.r { left: 1px; transform: scaleX(-1) rotate(-28deg); transform-origin: right bottom; }
+.bloom { position: absolute; top: calc(var(--s) / -2); left: calc(var(--s) / -2); width: var(--s); height: var(--s); animation: bloom 2.5s calc(var(--d) + 2.8s) cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+@keyframes grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes bloom { from { transform: scale(0) rotate(-90deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
+@keyframes sway { from { transform: rotate(-2.2deg); } to { transform: rotate(2.2deg); } }
+
+/* ---------- Hearts burst ---------- */
+.burst { position: fixed; top: 46%; left: 50%; z-index: 9; pointer-events: none; }
+.burst span { position: absolute; color: var(--rose); opacity: 0; text-shadow: 0 0 14px rgba(255, 92, 138, 0.85); animation: burst 4s ease-out forwards; }
+@keyframes burst {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  15% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1.3) rotate(25deg); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petal, .star, .stem-wrap, .seal, .seal-ring { animation: none; }
+  .petal { display: none; }
+}
+
+/* flames dim while she blows */
+.flame { opacity: calc(1 - var(--breath, 0) * 0.7); }
+
+/* ---------- Final surprise ---------- */
+.finale {
+  position: fixed; inset: 0; z-index: 15;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 24px; text-align: center;
+  background: radial-gradient(ellipse at 50% 45%, #4a2250 0%, var(--plum) 50%, var(--ink) 100%);
+  animation: sceneIn 2.5s ease both;
+}
+.finale p { margin: 0; font-family: var(--display); font-style: italic; }
+.f1 { font-size: clamp(1.4rem, 5vw, 2rem); color: var(--blush); animation: sceneIn 2.5s 1.2s ease both; }
+.f2 { font-weight: 500; font-size: clamp(2.6rem, 11vw, 4.6rem); line-height: 1.1; color: var(--cream); text-shadow: 0 0 36px rgba(244, 143, 177, 0.7); animation: sceneIn 3s 6.5s ease both; }
+.f3 { font-size: clamp(1.3rem, 5vw, 1.9rem); color: var(--gold); animation: sceneIn 3s 9s ease both; }
+.f-back {
+  margin-top: 28px; padding: 9px 20px; cursor: pointer; border-radius: 999px;
+  border: 1px solid rgba(255, 217, 228, 0.4); background: transparent; color: var(--blush);
+  font: 300 0.85rem "Jost", sans-serif; animation: sceneIn 2s 3s ease both;
+}
+.f-back:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+.finale { overflow-y: auto; justify-content: flex-start; padding: 40px 24px; }
+.finale > .bouquet { margin-top: auto; }
+.finale > .claim, .finale > .f-back { margin-bottom: auto; }
+.finale > :not(.garden) { position: relative; z-index: 1; }
+.finale .garden { position: fixed; z-index: 0; }
+.f4 { max-width: 24ch; font-size: clamp(1.2rem, 4.4vw, 1.6rem); color: var(--blush); animation: sceneIn 3s 11.5s ease both; }
+.f-photo { width: min(70vw, 260px); border: 6px solid var(--cream); border-radius: 16px; box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5); transform: rotate(-2deg); max-height: 46vh; object-fit: cover; animation: sceneIn 2.5s 0.2s ease both; }
+
+/* bouquet */
+.bouquet { position: relative; flex: none; width: 300px; height: 300px; animation: sceneIn 2s 1.5s ease both; }
+.bq-leaves, .bq-paper { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.bq-paper { filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.4)); }
+.bq-head { position: absolute; width: var(--s); height: var(--s); left: calc(var(--x) - var(--s) / 2); top: calc(var(--y) - var(--s) / 2); }
+.bq-head .bloom { position: static; width: 100%; height: 100%; animation: bloom 2s var(--d) cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+@media (max-width: 340px) { .bouquet { transform: scale(0.85); } }
+
+.claim {
+  margin-top: 12px; padding: 14px 40px; border: 0; border-radius: 999px; cursor: pointer;
+  background: linear-gradient(135deg, #f48fb1, #e8668f); color: #fff;
+  font: 400 1.1rem "Jost", sans-serif; letter-spacing: 0.08em; box-shadow: 0 8px 24px rgba(232, 102, 143, 0.5);
+  animation: sceneIn 1.8s 6.5s ease both;
+}
+.claim:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.finale.claimed .bouquet { transform: scale(0.75); margin: -36px 0; }
