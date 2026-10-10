@@ -431,7 +431,7 @@ export default function App() {
             <p className="message">{typed}</p>
             {typed.length >= MESSAGE.length && (
               <button className="wish" onClick={wish}>
-                {!lit ? "Wish again" : listening ? "Blow the candle after Wish" : "Make a wish"}
+                {!lit ? "" : listening ? "Blow the candle after Wish" : "Make a wish"}
               </button>
             )}
             {!lit && (
