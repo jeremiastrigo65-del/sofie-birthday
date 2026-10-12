@@ -8,8 +8,8 @@ const MESSAGE =
  "Happy birthday sof I wish u all the best in life, more happiness, success, love, and blessings. I hope u achieve all ur dreams and get everything that ur heart wishes for. Always take care of urself. Enjoy ur day 💗";
 // Your memory photos (put them in the public folder). Edit the captions!
 const SLIDES = [
-  { src: "/us22.jpg", caption: "" },
-  { src: "/us.jpg", caption: "" },
+  { src: "/us.jpg", caption: "hi" },
+  { src: "/ususus.jpg", caption: "happy birthday " },
   { src: "/us3.jpg", caption: "My favorite day with you" },
   { src: "/us4.jpg", caption: "Always you" },
 ];
